@@ -43,9 +43,9 @@ class DifferentiableAllReduceSum(torch.autograd.Function):
         if group.size() == 1:
             return tensor
 
-        handle = dist.all_reduce(tensor, op=dist.ReduceOp.SUM, group=group, async_op=True)
-        #return tensor
-        return handle
+        # handle = dist.all_reduce(tensor, op=dist.ReduceOp.SUM, group=group, async_op=True)
+        return tensor
+        # return handle
 
     @staticmethod
     def backward(ctx, grad_output):
