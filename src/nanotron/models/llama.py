@@ -43,6 +43,7 @@ from nanotron.parallel.tensor_parallel.nn import (
 from nanotron.random import RandomStates
 from nanotron.scaling.parametrization import SpectralMupParametrizator, StandardParametrizator
 from nanotron.utils import checkpoint_method
+from nanotron import distributed as dist
 
 logger = logging.get_logger(__name__)
 
@@ -699,35 +700,6 @@ class CausalSelfAttention(nn.Module, AttachableStore):
 
         return {"hidden_states": output, "sequence_mask": sequence_mask}
 
-class grad_ar(torch.autograd.Function):
-    """All-reduce gradients in a differentiable fashion"""
-
-    @staticmethod
-    def forward(ctx, tensor, group: Optional[ProcessGroup]):
-        ctx.group = group
-        return tensor
-
-    @staticmethod
-    def backward(ctx, grad_output):
-        group = ctx.group
-        return ar.apply(grad_output, group), None
-
-
-class ar(torch.autograd.Function):
-    """All-reduce in a differentiable fashion"""
-
-    @staticmethod
-    def forward(ctx, tensor, group: Optional[ProcessGroup]):
-        if group.size() == 1:
-            return tensor
-
-        handle = dist.all_reduce(tensor, op=dist.ReduceOp.SUM, group=group, async_op=True)
-        #return tensor
-        return handle
-
-    @staticmethod
-    def backward(ctx, grad_output):
-        return grad_output, None
 
 class LlamaDecoderLayer(nn.Module):
     def __init__(
@@ -777,9 +749,15 @@ class LlamaDecoderLayer(nn.Module):
         residual1 = hidden_states1
         hidden_states0 = self.post_attention_layernorm(hidden_states0)
         hidden_states0 = self.mlp(hidden_states=hidden_states0)["hidden_states"]
-        hidden_states0 = hidden_states0 + residual0
+        # print(f"===Guanhua {hidden_states0=}")
+        handle2 = dist.all_reduce(hidden_states0, op=dist.ReduceOp.SUM, group=tp_pg, async_op=True)
+        
         hidden_states1 = self.post_attention_layernorm(hidden_states1)
         hidden_states1 = self.mlp(hidden_states=hidden_states1)["hidden_states"]
+        handle2.wait()
+        handle3 = dist.all_reduce(hidden_states1, op=dist.ReduceOp.SUM, group=tp_pg, async_op=True)
+        hidden_states0 = hidden_states0 + residual0
+        handle3.wait()
         hidden_states1 = hidden_states1 + residual1
 
         hidden_states = torch.cat((hidden_states0,hidden_states1), dim=1)
