@@ -1,0 +1,202 @@
+W1218 12:20:30.092000 127224046755840 torch/distributed/run.py:779] 
+W1218 12:20:30.092000 127224046755840 torch/distributed/run.py:779] *****************************************
+W1218 12:20:30.092000 127224046755840 torch/distributed/run.py:779] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W1218 12:20:30.092000 127224046755840 torch/distributed/run.py:779] *****************************************
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]: Config:
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]: Config(general=GeneralArgs(project='debug',
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                            run='tiny_llama_%date_%jobid',
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                            seed=42,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                            step=None,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                            consumed_train_samples=None,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                            benchmark_csv_path=None,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                            ignore_sanity_checks=True),
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:        parallelism=ParallelismArgs(dp=1,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                    pp=1,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                    tp=2,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                    pp_engine=<nanotron.parallel.pipeline_parallel.engine.OneForwardOneBackwardPipelineEngine object at 0x7e6bdf9e8d00>,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                    tp_mode=<TensorParallelLinearMode.ALL_REDUCE: 1>,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                    tp_linear_async_communication=False,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                    recompute_layer=False,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                    tp_recompute_allgather=True,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                    expert_parallel_size=1),
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:        model=ModelArgs(model_config=LlamaConfig(bos_token_id=1,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                 eos_token_id=2,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                 hidden_act='silu',
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                 hidden_size=4096,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                 initializer_range=0.02,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                 intermediate_size=14336,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                 is_llama_config=True,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                 max_position_embeddings=1024,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                 num_attention_heads=32,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                 num_hidden_layers=8,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                 num_key_value_heads=8,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                 pad_token_id=None,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                 pretraining_tp=1,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                 rms_norm_eps=1e-05,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                 rope_scaling=None,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                 rope_theta=10000.0,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                 rope_interleaved=False,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                 tie_word_embeddings=True,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                 use_cache=True,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                 vocab_size=1024),
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                        init_method=RandomInit(std=0.025),
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                        dtype=torch.bfloat16,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                        make_vocab_size_divisible_by=1,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                        ddp_bucket_cap_mb=25),
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:        tokenizer=TokenizerArgs(tokenizer_name_or_path='robot-test/dummy-tokenizer-wordlevel',
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                tokenizer_revision=None,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                tokenizer_max_length=None),
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:        checkpoints=CheckpointsArgs(checkpoints_path=PosixPath('checkpoints'),
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                    checkpoint_interval=20,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                    save_initial_state=False,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                    save_final_state=False,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                    resume_checkpoint_path=None,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                    load_lr_scheduler=True,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                    load_optimizer=True,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                    checkpoints_path_is_shared_file_system=False),
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:        logging=LoggingArgs(log_level='info',
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                            log_level_replica='info',
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                            iteration_step_info_interval=1),
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:        tokens=TokensArgs(sequence_length=1024,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                          train_steps=20,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                          micro_batch_size=16,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                          batch_accumulation_per_replica=1,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                          val_check_interval=-1,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                          limit_val_batches=0,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                          limit_test_batches=0),
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:        optimizer=OptimizerArgs(optimizer_factory=AdamWOptimizerArgs(adam_eps=1e-08,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                                     adam_beta1=0.9,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                                     adam_beta2=0.95,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                                     torch_adam_is_fused=True,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                                     name='adamW'),
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                zero_stage=0,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                weight_decay=0.01,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                clip_grad=1.0,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                accumulate_grad_in_fp32=True,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                learning_rate_scheduler=LRSchedulerArgs(learning_rate=0.0003,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                                        lr_warmup_steps=2,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                                        lr_warmup_style='linear',
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                                        lr_decay_style='cosine',
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                                        lr_decay_steps=13,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                                        lr_decay_starting_step=None,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                                        min_decay_lr=1e-05)),
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:        data_stages=[DatasetStageArgs(name='Stable Training Stage',
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                      start_training_step=1,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                      data=DataArgs(dataset=PretrainDatasetsArgs(hf_dataset_or_datasets='stas/openwebtext-10k',
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                                                 hf_dataset_splits='train',
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                                                 hf_dataset_config_name=None,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                                                 dataset_processing_num_proc_per_process=1,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                                                 dataset_overwrite_cache=False,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                                                 text_column_name='text'),
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                    seed=42,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                    num_loading_workers=1)),
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                     DatasetStageArgs(name='Annealing Phase',
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                      start_training_step=10,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                      data=DataArgs(dataset=PretrainDatasetsArgs(hf_dataset_or_datasets='stas/openwebtext-10k',
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                                                 hf_dataset_splits='train',
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                                                 hf_dataset_config_name=None,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                                                 dataset_processing_num_proc_per_process=1,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                                                 dataset_overwrite_cache=False,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                                                 text_column_name='text'),
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                    seed=42,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:                                                    num_loading_workers=1))],
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:        profiler=ProfilerArgs(profiler_export_path=PosixPath('small-llama')),
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:        lighteval=None,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:        s3_upload=None)
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]: Model Config:
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]: LlamaConfig(bos_token_id=1,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:             eos_token_id=2,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:             hidden_act='silu',
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:             hidden_size=4096,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:             initializer_range=0.02,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:             intermediate_size=14336,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:             is_llama_config=True,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:             max_position_embeddings=1024,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:             num_attention_heads=32,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:             num_hidden_layers=8,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:             num_key_value_heads=8,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:             pad_token_id=None,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:             pretraining_tp=1,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:             rms_norm_eps=1e-05,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:             rope_scaling=None,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:             rope_theta=10000.0,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:             rope_interleaved=False,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:             tie_word_embeddings=True,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:             use_cache=True,
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]:             vocab_size=1024)
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]: Building model..
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]: Initialize RoPE Theta = 10000.0
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]: Setting PP block ranks...
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=1]: Local number of parameters: 875M (1668.13MiB)
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]: Total number of parameters: 1.75G (3336.27MiB)
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]: Local number of parameters: 875M (1668.13MiB)
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=1]: [After model building] Memory usage: 1668.15MiB. Peak allocated: 1672.15MiB Peak reserved: 1690.00MiB
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]: [After model building] Memory usage: 1668.15MiB. Peak allocated: 1672.15MiB Peak reserved: 1690.00MiB
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]: No checkpoint path provided.
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]: Parametrizing model parameters using StandardParametrizator
+12/18/2024 12:20:32 [INFO|DP=0|PP=0|TP=0]: [Optimizer Building] Using LearningRateForSP as learning rate
+12/18/2024 12:20:33 [INFO|DP=0|PP=0|TP=0]: [Training Plan] Stage Stable Training Stage has 9 remaining training steps and has consumed 0 samples
+12/18/2024 12:20:33 [INFO|DP=0|PP=0|TP=0]: Using `datasets` library
+12/18/2024 12:20:33 [INFO|DP=0|PP=0|TP=0]: Loading tokenizer from robot-test/dummy-tokenizer-wordlevel and transformers/hf_hub versions ('4.44.2', '0.24.6')
+/usr/local/lib/python3.10/dist-packages/transformers/tokenization_utils_base.py:1601: FutureWarning: `clean_up_tokenization_spaces` was not set. It will be set to `True` by default. This behavior will be depracted in transformers v4.45, and will be then set to `False` by default. For more details check this issue: https://github.com/huggingface/transformers/issues/31884
+  warnings.warn(
+12/18/2024 12:21:35 [INFO|DP=0|PP=0|TP=0]: [Training Plan] Stage Annealing Phase has 10 remaining training steps and has consumed 0 samples
+12/18/2024 12:21:35 [INFO|DP=0|PP=0|TP=0]: [Training Plan] There are 2 training stages 
+12/18/2024 12:21:35 [INFO|DP=0|PP=0|TP=0]: [Stage Stable Training Stage] start from step 1 
+12/18/2024 12:21:35 [INFO|DP=0|PP=0|TP=0]: [Stage Annealing Phase] start from step 10 
+12/18/2024 12:21:35 [INFO|DP=0|PP=0|TP=0]: 
+12/18/2024 12:21:35 [INFO|DP=0|PP=0|TP=0]: [Start training] datetime: 2024-12-18 12:21:35.042021 | mbs: 16 | grad_accum: 1 | global_batch_size: 16 | sequence_length: 1024 | train_steps: 20 | start_iteration_step: 0 | consumed_train_samples: 0
+12/18/2024 12:21:35 [INFO|DP=0|PP=0|TP=0]: Resuming training from stage Stable Training Stage, it has trained for 0 samples and has 9 remaining train steps
+12/18/2024 12:21:35 [INFO|DP=0|PP=0|TP=0]:  Memory usage: 8340.68MiB. Peak allocated 8340.68MiB. Peak reserved: 8366.00MiB
+/home/guanhua/.local/lib/python3.10/site-packages/flash_attn/ops/triton/layer_norm.py:959: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  def forward(
+/home/guanhua/.local/lib/python3.10/site-packages/flash_attn/ops/triton/layer_norm.py:1018: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, dout, *args):
+/usr/local/lib/python3.10/dist-packages/transformers/tokenization_utils_base.py:1601: FutureWarning: `clean_up_tokenization_spaces` was not set. It will be set to `True` by default. This behavior will be depracted in transformers v4.45, and will be then set to `False` by default. For more details check this issue: https://github.com/huggingface/transformers/issues/31884
+  warnings.warn(
+/home/guanhua/.local/lib/python3.10/site-packages/flash_attn/ops/triton/layer_norm.py:959: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  def forward(
+/home/guanhua/.local/lib/python3.10/site-packages/flash_attn/ops/triton/layer_norm.py:1018: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, dout, *args):
+/home/guanhua/.local/lib/python3.10/site-packages/torch/autograd/graph.py:769: UserWarning: c10d::allreduce_: an autograd kernel was not registered to the Autograd key(s) but we are trying to backprop through it. This may lead to silently incorrect behavior. This behavior is deprecated and will be removed in a future version of PyTorch. If your operator is differentiable, please ensure you have registered an autograd kernel to the correct Autograd key (e.g. DispatchKey::Autograd, DispatchKey::CompositeImplicitAutograd). If your operator is not differentiable, or to squash this warning and use the previous behavior, please register torch::CppFunction::makeFallthrough() to DispatchKey::Autograd. (Triggered internally at ../torch/csrc/autograd/autograd_not_implemented_fallback.cpp:63.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+/home/guanhua/.local/lib/python3.10/site-packages/torch/autograd/graph.py:769: UserWarning: c10d::allreduce_: an autograd kernel was not registered to the Autograd key(s) but we are trying to backprop through it. This may lead to silently incorrect behavior. This behavior is deprecated and will be removed in a future version of PyTorch. If your operator is differentiable, please ensure you have registered an autograd kernel to the correct Autograd key (e.g. DispatchKey::Autograd, DispatchKey::CompositeImplicitAutograd). If your operator is not differentiable, or to squash this warning and use the previous behavior, please register torch::CppFunction::makeFallthrough() to DispatchKey::Autograd. (Triggered internally at ../torch/csrc/autograd/autograd_not_implemented_fallback.cpp:63.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+12/18/2024 12:22:40 [INFO|DP=0|PP=0|TP=0]:  Memory usage: 8359.21MiB. Peak allocated 22058.31MiB. Peak reserved: 23810.00MiB
+12/18/2024 12:22:40 [INFO|DP=0|PP=0|TP=0]: iteration: 1 / 20 | consumed_tokens: 16.4K | elapsed_time_per_iteration_ms: 65.2K | tokens_per_sec: 251 | tokens_per_sec_per_gpu: 126 | global_batch_size: 16 | lm_loss: 6 | lr: 0.00015 | model_tflops_per_gpu: 1.37 | hardware_tflops_per_gpu: 1.37 | grad_norm: 295 | cuda_memory_allocated: 15.8G | cuda_max_memory_reserved: 25G | hd_total_memory_tb: 1.97T | hd_used_memory_tb: 126G | hd_free_memory_tb: 1.74T
+12/18/2024 12:22:40 [INFO|DP=0|PP=0|TP=0]:  Memory usage: 15031.77MiB. Peak allocated 15031.77MiB. Peak reserved: 23810.00MiB
+12/18/2024 12:22:40 [INFO|DP=0|PP=0|TP=0]:  Memory usage: 15031.77MiB. Peak allocated 28736.96MiB. Peak reserved: 31218.00MiB
+12/18/2024 12:22:41 [INFO|DP=0|PP=0|TP=0]: iteration: 2 / 20 | consumed_tokens: 32.8K | elapsed_time_per_iteration_ms: 1.12K | tokens_per_sec: 14.6K | tokens_per_sec_per_gpu: 7.31K | global_batch_size: 16 | lm_loss: 6.1 | lr: 0.0003 | model_tflops_per_gpu: 79.6 | hardware_tflops_per_gpu: 79.6 | grad_norm: 299 | cuda_memory_allocated: 15.8G | cuda_max_memory_reserved: 32.7G | hd_total_memory_tb: 1.97T | hd_used_memory_tb: 126G | hd_free_memory_tb: 1.74T
+12/18/2024 12:22:41 [INFO|DP=0|PP=0|TP=0]:  Memory usage: 15031.77MiB. Peak allocated 15031.80MiB. Peak reserved: 31218.00MiB
+12/18/2024 12:22:42 [INFO|DP=0|PP=0|TP=0]:  Memory usage: 15031.77MiB. Peak allocated 28736.96MiB. Peak reserved: 31330.00MiB
+12/18/2024 12:22:43 [INFO|DP=0|PP=0|TP=0]: iteration: 3 / 20 | consumed_tokens: 49.2K | elapsed_time_per_iteration_ms: 1.12K | tokens_per_sec: 14.6K | tokens_per_sec_per_gpu: 7.3K | global_batch_size: 16 | lm_loss: 7.63 | lr: 0.000296 | model_tflops_per_gpu: 79.6 | hardware_tflops_per_gpu: 79.6 | grad_norm: 56.6 | cuda_memory_allocated: 15.8G | cuda_max_memory_reserved: 32.9G | hd_total_memory_tb: 1.97T | hd_used_memory_tb: 126G | hd_free_memory_tb: 1.74T
+12/18/2024 12:22:43 [INFO|DP=0|PP=0|TP=0]:  Memory usage: 15031.77MiB. Peak allocated 15031.80MiB. Peak reserved: 31330.00MiB
+12/18/2024 12:22:43 [INFO|DP=0|PP=0|TP=0]:  Memory usage: 15031.77MiB. Peak allocated 28736.96MiB. Peak reserved: 31330.00MiB
+12/18/2024 12:22:44 [INFO|DP=0|PP=0|TP=0]: iteration: 4 / 20 | consumed_tokens: 65.5K | elapsed_time_per_iteration_ms: 1.12K | tokens_per_sec: 14.6K | tokens_per_sec_per_gpu: 7.28K | global_batch_size: 16 | lm_loss: 48.9 | lr: 0.000283 | model_tflops_per_gpu: 79.4 | hardware_tflops_per_gpu: 79.4 | grad_norm: 168 | cuda_memory_allocated: 15.8G | cuda_max_memory_reserved: 32.9G | hd_total_memory_tb: 1.97T | hd_used_memory_tb: 126G | hd_free_memory_tb: 1.74T
+12/18/2024 12:22:44 [INFO|DP=0|PP=0|TP=0]:  Memory usage: 15031.77MiB. Peak allocated 15031.80MiB. Peak reserved: 31330.00MiB
+12/18/2024 12:22:44 [INFO|DP=0|PP=0|TP=0]:  Memory usage: 15031.77MiB. Peak allocated 28736.96MiB. Peak reserved: 31330.00MiB
+12/18/2024 12:22:45 [INFO|DP=0|PP=0|TP=0]: iteration: 5 / 20 | consumed_tokens: 81.9K | elapsed_time_per_iteration_ms: 1.12K | tokens_per_sec: 14.6K | tokens_per_sec_per_gpu: 7.29K | global_batch_size: 16 | lm_loss: 7.06 | lr: 0.000264 | model_tflops_per_gpu: 79.5 | hardware_tflops_per_gpu: 79.5 | grad_norm: 36.2
+12/18/2024 12:22:46 [INFO|DP=0|PP=0|TP=0]: iteration: 6 / 20 | consumed_tokens: 98.3K | elapsed_time_per_iteration_ms: 1.12K | tokens_per_sec: 14.6K | tokens_per_sec_per_gpu: 7.31K | global_batch_size: 16 | lm_loss: 20.4 | lr: 0.000237 | model_tflops_per_gpu: 79.7 | hardware_tflops_per_gpu: 79.7 | grad_norm: 91.3
+12/18/2024 12:22:47 [INFO|DP=0|PP=0|TP=0]: iteration: 7 / 20 | consumed_tokens: 115K | elapsed_time_per_iteration_ms: 1.12K | tokens_per_sec: 14.6K | tokens_per_sec_per_gpu: 7.29K | global_batch_size: 16 | lm_loss: 3.47 | lr: 0.000206 | model_tflops_per_gpu: 79.5 | hardware_tflops_per_gpu: 79.5 | grad_norm: 28.5
+12/18/2024 12:22:48 [INFO|DP=0|PP=0|TP=0]: iteration: 8 / 20 | consumed_tokens: 131K | elapsed_time_per_iteration_ms: 1.12K | tokens_per_sec: 14.6K | tokens_per_sec_per_gpu: 7.3K | global_batch_size: 16 | lm_loss: 5.18 | lr: 0.000172 | model_tflops_per_gpu: 79.5 | hardware_tflops_per_gpu: 79.5 | grad_norm: 9.26
+12/18/2024 12:22:49 [INFO|DP=0|PP=0|TP=0]: iteration: 9 / 20 | consumed_tokens: 147K | elapsed_time_per_iteration_ms: 1.12K | tokens_per_sec: 14.6K | tokens_per_sec_per_gpu: 7.29K | global_batch_size: 16 | lm_loss: 4.41 | lr: 0.000138 | model_tflops_per_gpu: 79.5 | hardware_tflops_per_gpu: 79.5 | grad_norm: 9.33
+12/18/2024 12:22:49 [INFO|DP=0|PP=0|TP=1]: [Training Stage: Annealing Phase] Clearing the previous training stage's dataloader and datasets from memory
+12/18/2024 12:22:49 [INFO|DP=0|PP=0|TP=0]: [Training Stage: Annealing Phase] Clearing the previous training stage's dataloader and datasets from memory
+12/18/2024 12:22:49 [INFO|DP=0|PP=0|TP=0]: Using `datasets` library
+12/18/2024 12:22:49 [INFO|DP=0|PP=0|TP=0]: Loading tokenizer from robot-test/dummy-tokenizer-wordlevel and transformers/hf_hub versions ('4.44.2', '0.24.6')
+/usr/local/lib/python3.10/dist-packages/transformers/tokenization_utils_base.py:1601: FutureWarning: `clean_up_tokenization_spaces` was not set. It will be set to `True` by default. This behavior will be depracted in transformers v4.45, and will be then set to `False` by default. For more details check this issue: https://github.com/huggingface/transformers/issues/31884
+  warnings.warn(
+12/18/2024 12:24:01 [INFO|DP=0|PP=0|TP=0]: iteration: 10 / 20 | consumed_tokens: 164K | elapsed_time_per_iteration_ms: 72K | tokens_per_sec: 228 | tokens_per_sec_per_gpu: 114 | global_batch_size: 16 | lm_loss: 3.22 | lr: 0.000104 | model_tflops_per_gpu: 1.24 | hardware_tflops_per_gpu: 1.24 | grad_norm: 10.4
+12/18/2024 12:24:02 [INFO|DP=0|PP=0|TP=0]: iteration: 11 / 20 | consumed_tokens: 180K | elapsed_time_per_iteration_ms: 1.11K | tokens_per_sec: 14.7K | tokens_per_sec_per_gpu: 7.35K | global_batch_size: 16 | lm_loss: 2.73 | lr: 7.26e-05 | model_tflops_per_gpu: 80.1 | hardware_tflops_per_gpu: 80.1 | grad_norm: 39.7
+12/18/2024 12:24:04 [INFO|DP=0|PP=0|TP=0]: iteration: 12 / 20 | consumed_tokens: 197K | elapsed_time_per_iteration_ms: 1.11K | tokens_per_sec: 14.7K | tokens_per_sec_per_gpu: 7.36K | global_batch_size: 16 | lm_loss: 3.38 | lr: 4.65e-05 | model_tflops_per_gpu: 80.2 | hardware_tflops_per_gpu: 80.2 | grad_norm: 55
+12/18/2024 12:24:05 [INFO|DP=0|PP=0|TP=0]: iteration: 13 / 20 | consumed_tokens: 213K | elapsed_time_per_iteration_ms: 1.12K | tokens_per_sec: 14.7K | tokens_per_sec_per_gpu: 7.33K | global_batch_size: 16 | lm_loss: 2.55 | lr: 2.66e-05 | model_tflops_per_gpu: 79.9 | hardware_tflops_per_gpu: 79.9 | grad_norm: 44.8
+12/18/2024 12:24:06 [INFO|DP=0|PP=0|TP=0]: iteration: 14 / 20 | consumed_tokens: 229K | elapsed_time_per_iteration_ms: 1.12K | tokens_per_sec: 14.6K | tokens_per_sec_per_gpu: 7.31K | global_batch_size: 16 | lm_loss: 1.78 | lr: 1.42e-05 | model_tflops_per_gpu: 79.7 | hardware_tflops_per_gpu: 79.7 | grad_norm: 22.4
+12/18/2024 12:24:07 [INFO|DP=0|PP=0|TP=0]: iteration: 15 / 20 | consumed_tokens: 246K | elapsed_time_per_iteration_ms: 1.12K | tokens_per_sec: 14.6K | tokens_per_sec_per_gpu: 7.3K | global_batch_size: 16 | lm_loss: 1.49 | lr: 1e-05 | model_tflops_per_gpu: 79.6 | hardware_tflops_per_gpu: 79.6 | grad_norm: 5.52
+12/18/2024 12:24:08 [INFO|DP=0|PP=0|TP=0]: iteration: 16 / 20 | consumed_tokens: 262K | elapsed_time_per_iteration_ms: 1.12K | tokens_per_sec: 14.6K | tokens_per_sec_per_gpu: 7.3K | global_batch_size: 16 | lm_loss: 1.41 | lr: 1e-05 | model_tflops_per_gpu: 79.6 | hardware_tflops_per_gpu: 79.6 | grad_norm: 4.39
+12/18/2024 12:24:12 [INFO|DP=0|PP=0|TP=0]: iteration: 17 / 20 | consumed_tokens: 279K | elapsed_time_per_iteration_ms: 1.12K | tokens_per_sec: 14.6K | tokens_per_sec_per_gpu: 7.31K | global_batch_size: 16 | lm_loss: 1.35 | lr: 1e-05 | model_tflops_per_gpu: 79.6 | hardware_tflops_per_gpu: 79.6 | grad_norm: 5.36
+12/18/2024 12:24:13 [INFO|DP=0|PP=0|TP=0]: iteration: 18 / 20 | consumed_tokens: 295K | elapsed_time_per_iteration_ms: 1.12K | tokens_per_sec: 14.6K | tokens_per_sec_per_gpu: 7.29K | global_batch_size: 16 | lm_loss: 1.34 | lr: 1e-05 | model_tflops_per_gpu: 79.5 | hardware_tflops_per_gpu: 79.5 | grad_norm: 5.35
+12/18/2024 12:24:14 [INFO|DP=0|PP=0|TP=0]: iteration: 19 / 20 | consumed_tokens: 311K | elapsed_time_per_iteration_ms: 1.12K | tokens_per_sec: 14.6K | tokens_per_sec_per_gpu: 7.3K | global_batch_size: 16 | lm_loss: 1.41 | lr: 1e-05 | model_tflops_per_gpu: 79.5 | hardware_tflops_per_gpu: 79.5 | grad_norm: 5.64
+12/18/2024 12:24:15 [INFO|DP=0|PP=0|TP=0]: iteration: 20 / 20 | consumed_tokens: 328K | elapsed_time_per_iteration_ms: 1.13K | tokens_per_sec: 14.6K | tokens_per_sec_per_gpu: 7.28K | global_batch_size: 16 | lm_loss: 1.32 | lr: 1e-05 | model_tflops_per_gpu: 79.3 | hardware_tflops_per_gpu: 79.3 | grad_norm: 3.82
+12/18/2024 12:24:15 [WARNING|DP=0|PP=0|TP=0]: Saving checkpoint at checkpoints/20
+Saving weights:   0%|          | 0/51 [00:00<?, ?it/s]Saving weights:   0%|          | 0/51 [00:00<?, ?it/s]Saving weights:   8%|▊         | 4/51 [00:00<00:01, 38.47it/s]Saving weights:   8%|▊         | 4/51 [00:00<00:01, 38.46it/s]Saving weights:  16%|█▌        | 8/51 [00:00<00:03, 13.69it/s]Saving weights:  16%|█▌        | 8/51 [00:00<00:03, 13.59it/s]Saving weights:  24%|██▎       | 12/51 [00:00<00:03, 12.45it/s]Saving weights:  24%|██▎       | 12/51 [00:00<00:03, 12.44it/s]Saving weights:  27%|██▋       | 14/51 [00:01<00:02, 12.99it/s]Saving weights:  27%|██▋       | 14/51 [00:01<00:02, 13.00it/s]Saving weights:  35%|███▌      | 18/51 [00:01<00:02, 12.23it/s]Saving weights:  35%|███▌      | 18/51 [00:01<00:02, 12.30it/s]Saving weights:  39%|███▉      | 20/51 [00:01<00:02, 12.78it/s]Saving weights:  39%|███▉      | 20/51 [00:01<00:02, 12.87it/s]Saving weights:  47%|████▋     | 24/51 [00:01<00:02, 12.17it/s]Saving weights:  47%|████▋     | 24/51 [00:01<00:02, 12.24it/s]Saving weights:  51%|█████     | 26/51 [00:01<00:01, 12.72it/s]Saving weights:  51%|█████     | 26/51 [00:01<00:01, 12.79it/s]Saving weights:  59%|█████▉    | 30/51 [00:02<00:01, 12.00it/s]Saving weights:  59%|█████▉    | 30/51 [00:02<00:01, 12.05it/s]Saving weights:  63%|██████▎   | 32/51 [00:02<00:01, 12.55it/s]Saving weights:  63%|██████▎   | 32/51 [00:02<00:01, 12.58it/s]Saving weights:  71%|███████   | 36/51 [00:02<00:01, 11.96it/s]Saving weights:  71%|███████   | 36/51 [00:02<00:01, 11.99it/s]Saving weights:  75%|███████▍  | 38/51 [00:02<00:01, 12.53it/s]Saving weights:  75%|███████▍  | 38/51 [00:02<00:01, 12.55it/s]Saving weights:  82%|████████▏ | 42/51 [00:03<00:00, 11.83it/s]Saving weights:  82%|████████▏ | 42/51 [00:03<00:00, 11.85it/s]Saving weights:  86%|████████▋ | 44/51 [00:03<00:00, 12.41it/s]Saving weights:  86%|████████▋ | 44/51 [00:03<00:00, 12.43it/s]Saving weights:  94%|█████████▍| 48/51 [00:03<00:00, 11.98it/s]Saving weights:  94%|█████████▍| 48/51 [00:03<00:00, 12.00it/s]Saving weights:  98%|█████████▊| 50/51 [00:03<00:00, 12.54it/s]Saving weights:  98%|█████████▊| 50/51 [00:03<00:00, 12.55it/s]Saving weights: 100%|██████████| 51/51 [00:03<00:00, 12.85it/s]
+Saving weights: 100%|██████████| 51/51 [00:03<00:00, 12.88it/s]
