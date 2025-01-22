@@ -34,9 +34,74 @@ from nanotron.parallel.tensor_parallel.distributed_differentiable_primitives imp
 from nanotron.parallel.tensor_parallel.enum import TensorParallelLinearMode
 from nanotron.parallel.tensor_parallel.functional import (
     column_linear,
+    column_linear1,
     row_linear,
 )
 from nanotron.parallel.tied_parameters import create_tied_parameter
+
+class TensorParallelColumnLinear1(nn.Linear):
+    def __init__(
+        self,
+        in_features,
+        out_features,
+        pg: dist.ProcessGroup,
+        mode: TensorParallelLinearMode,
+        bias=True,
+        device=None,
+        dtype=None,
+        async_communication: bool = False,
+        contiguous_chunks: Optional[Tuple[int, ...]] = None,
+        tp_recompute_allgather: bool = True,
+    ):
+        self.pg = pg
+        self.world_size = pg.size()
+
+        assert out_features % self.world_size == 0
+
+        self.in_features = in_features
+        self.out_features = out_features // self.world_size
+        self.tp_recompute_allgather = tp_recompute_allgather
+
+        # self.h_dic = h_dic
+        # self.h_id = h_id
+        super().__init__(
+            in_features=self.in_features,
+            out_features=self.out_features,
+            bias=bias,
+            device=device,
+            dtype=dtype,
+        )
+
+        self.mode = mode
+        self.async_communication = async_communication
+
+        if contiguous_chunks is not None:
+            assert (
+                sum(contiguous_chunks) == out_features
+            ), f"Sum of contiguous chunks ({sum(contiguous_chunks)}) must equal to out_features ({out_features})"
+        split_config = SplitConfig(split_dim=0, contiguous_chunks=contiguous_chunks)
+
+        mark_all_parameters_in_module_as_sharded(
+            self,
+            pg=self.pg,
+            split_config=split_config,
+        )
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        return column_linear1(
+            input=x,
+            weight=self.weight,
+            bias=self.bias,
+            group=self.pg,
+            tp_mode=self.mode,
+            async_communication=self.async_communication,
+            tp_recompute_allgather=self.tp_recompute_allgather,
+            # h_dic = self.h_dic
+            # h_id = self.h_id
+        )
+
+    def extra_repr(self) -> str:
+        return f"tp_rank={dist.get_rank(self.pg)}, {super().extra_repr()}, unsharded_out_features={self.out_features * self.world_size}"
 
 
 class TensorParallelColumnLinear(nn.Linear):
@@ -62,6 +127,8 @@ class TensorParallelColumnLinear(nn.Linear):
         self.out_features = out_features // self.world_size
         self.tp_recompute_allgather = tp_recompute_allgather
 
+        # self.h_dic = h_dic
+        # self.h_id = h_id
         super().__init__(
             in_features=self.in_features,
             out_features=self.out_features,
@@ -94,6 +161,8 @@ class TensorParallelColumnLinear(nn.Linear):
             tp_mode=self.mode,
             async_communication=self.async_communication,
             tp_recompute_allgather=self.tp_recompute_allgather,
+            # h_dic = self.h_dic
+            # h_id = self.h_id
         )
 
     def extra_repr(self) -> str:
@@ -211,6 +280,7 @@ class TiedLinear(nn.Linear):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         y = super().forward(x)
         if self.mode is TensorParallelLinearMode.ALL_REDUCE:
+            print(f"===Guanhua goes into TiedLinear fwd")
             y = differentiable_identity(y, group=self.pg)
         elif self.mode is TensorParallelLinearMode.REDUCE_SCATTER:
             y = differentiable_all_gather(y, group=self.pg)
@@ -290,7 +360,7 @@ class TensorParallelEmbedding(nn.Embedding):
             out = out * (~input_mask[..., None])
 
         if self.mode is TensorParallelLinearMode.ALL_REDUCE:
-            out = differentiable_all_reduce_sum(out, group=self.pg)
+            out = differentiable_all_reduce_sum(out, group=self.pg) #guanhua
         elif self.mode is TensorParallelLinearMode.REDUCE_SCATTER:
             out = differentiable_reduce_scatter_sum(out, group=self.pg)
         else:

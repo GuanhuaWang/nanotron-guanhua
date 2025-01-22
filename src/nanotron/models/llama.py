@@ -36,6 +36,7 @@ from nanotron.parallel.pipeline_parallel.p2p import P2P
 from nanotron.parallel.tensor_parallel.functional import sharded_cross_entropy
 from nanotron.parallel.tensor_parallel.nn import (
     TensorParallelColumnLinear,
+    TensorParallelColumnLinear1,
     TensorParallelEmbedding,
     TensorParallelLinearMode,
     TensorParallelRowLinear,
@@ -242,14 +243,15 @@ class MLP(nn.Module):
         )
         self.split_silu_mul = GLUActivation(config.hidden_act)
 
-    def forward(self, hidden_states):  # [seq_length, batch_size, hidden_dim]
+    def forward(self, merged_states):  # [seq_length, batch_size, hidden_dim]
         # hidden_states0, hidden_states1 = hidden_states.chunk(2, dim=1)
         # merged_states0 = self.gate_up_proj(hidden_states0)
         # merged_states1 = self.gate_up_proj(hidden_states1)
         # hidden_states0 = self.down_proj(self.split_silu_mul(merged_states0))
         # hidden_states1 = self.down_proj(self.split_silu_mul(merged_states1))
         # hidden_states = torch.cat((hidden_states0,hidden_states1), dim=1)
-        merged_states = self.gate_up_proj(hidden_states)
+        # merged_states = self.gate_up_proj(hidden_states)
+        #hidden_states = self.down_proj(self.split_silu_mul(merged_states))
         hidden_states = self.down_proj(self.split_silu_mul(merged_states))
         return {"hidden_states": hidden_states}
 
@@ -390,7 +392,7 @@ class CausalSelfAttention(nn.Module, AttachableStore):
             config.num_key_value_heads * self.d_qk,  # shape of k
             config.num_key_value_heads * self.d_qk,  # shape of v
         )
-        self.qkv_proj = TensorParallelColumnLinear(
+        self.qkv_proj = TensorParallelColumnLinear1(
             self.d_model,
             config.num_attention_heads * self.d_qk + 2 * config.num_key_value_heads * self.d_qk,
             pg=tp_pg,
@@ -452,7 +454,7 @@ class CausalSelfAttention(nn.Module, AttachableStore):
 
         qkv_states = self.qkv_proj(
             hidden_states
-        )  # [seq_length, batch_size, n_local_q_heads * d_qk + 2 * n_local_kv_heads * d_qk]
+        )  # [seq_length, batch_size, n_local_q_heads * d_qk + 2 * n_local_kv_heads * d_qk] # col-linear
         q_length, batch_size, _ = qkv_states.shape
 
         if self.is_gqa:
@@ -696,10 +698,11 @@ class CausalSelfAttention(nn.Module, AttachableStore):
         attention_output = (
             attention_output.contiguous().view(batch_size, q_length, self.n_local_q_heads * self.d_v).transpose(0, 1)
         )
-        output = self.o_proj(attention_output)
+        output = self.o_proj(attention_output) # row-linear ar fwd
 
         return {"hidden_states": output, "sequence_mask": sequence_mask}
 
+h_dic = {}
 
 class LlamaDecoderLayer(nn.Module):
     def __init__(
@@ -717,7 +720,8 @@ class LlamaDecoderLayer(nn.Module):
             tp_pg=tp_pg,
             layer_idx=layer_idx,
         )
-
+        self.layer_idx = layer_idx
+        self.tp_pg= tp_pg
         self.post_attention_layernorm = TritonRMSNorm(config.hidden_size, eps=config.rms_norm_eps)
         self.mlp = MLP(config=config, parallel_config=parallel_config, tp_pg=tp_pg)
 
@@ -728,6 +732,11 @@ class LlamaDecoderLayer(nn.Module):
         hidden_states: Union[torch.Tensor, TensorPointer],
         sequence_mask: Union[torch.Tensor, TensorPointer],
     ) -> List[Union[torch.Tensor, TensorPointer]]:
+        from torch.nn import functional as F
+        from nanotron.parallel.tensor_parallel.distributed_differentiable_primitives import (
+            no_op,
+            async_col_par
+        )
         hidden_states0, hidden_states1 = hidden_states.chunk(2, dim=1)
         residual0, residual1 = hidden_states0, hidden_states1
         # residual = hidden_states
@@ -738,24 +747,58 @@ class LlamaDecoderLayer(nn.Module):
         # hidden_states0, hidden_states1 = hidden_states.chunk(2, dim=1)
         sequence_mask0, sequence_mask1 = sequence_mask.chunk(2, dim=0)
         output0 = self.attn(hidden_states=hidden_states0, sequence_mask=sequence_mask0) #[batch, seq]
+        handle0 = dist.all_reduce(output0["hidden_states"],op=dist.ReduceOp.SUM, group=self.tp_pg, async_op = True)
         output1 = self.attn(hidden_states=hidden_states1, sequence_mask=sequence_mask1) #[batch, seq]
+        handel1 = dist.all_reduce(output1["hidden_states"], op=dist.ReduceOp.SUM, group=self.tp_pg, async_op = True)
         # print(f"===Guanhua {sequence_mask.shape=}")
+        handle0.wait()
         hidden_states0 = output0["hidden_states"]
-        hidden_states1 = output1["hidden_states"]
         hidden_states0 = hidden_states0 + residual0
+        #residual0 = hidden_states0
+        #hidden_states1 = output1["hidden_states"]
+        residual0 = hidden_states0
+        hidden_states0 = self.post_attention_layernorm(hidden_states0)
+        no_op(hidden_states1, h_dic, f'{self.layer_idx}_0')
+        # norm then MLP for batch1
+        hidden_states1 = output1["hidden_states"]
         hidden_states1 = hidden_states1 + residual1
 
-        residual0 = hidden_states0
+        #residual0 = hidden_states0
         residual1 = hidden_states1
-        hidden_states0 = self.post_attention_layernorm(hidden_states0)
-        hidden_states0 = self.mlp(hidden_states=hidden_states0)["hidden_states"]
+        #hidden_states0 = self.post_attention_layernorm(hidden_states0)
+        #hidden_states0 = self.mlp(hidden_states=hidden_states0)["hidden_states"]
         # print(f"===Guanhua {hidden_states0=}")
-        handle2 = dist.all_reduce(hidden_states0, op=dist.ReduceOp.SUM, group=tp_pg, async_op=True)
+        #handle2 = dist.all_reduce(hidden_states0, op=dist.ReduceOp.SUM, group=self.tp_pg, async_op=True)
         
         hidden_states1 = self.post_attention_layernorm(hidden_states1)
-        hidden_states1 = self.mlp(hidden_states=hidden_states1)["hidden_states"]
+        no_op(hidden_states1, h_dic, f'{self.layer_idx}_1')
+        #print(f"===guanhua after no_op {h_dic=}")
+        async_col_par(hidden_states0, h_dic, f'{self.layer_idx}_0', group=self.tp_pg)
+        #print(f"===guanhua after asyc col{h_dic=}")
+        hidden_states00 = F.linear(hidden_states0, self.mlp.gate_up_proj.weight, self.mlp.gate_up_proj.bias)
+        hidden_states0 = self.mlp(merged_states=hidden_states00)["hidden_states"]
+        # print(f"===Guanhua {hidden_states0=}")
+        handle2 = dist.all_reduce(hidden_states0, op=dist.ReduceOp.SUM, group=self.tp_pg, async_op=True)
+        handel1.wait()
+
+        # # norm then MLP for batch1
+        # hidden_states1 = output1["hidden_states"]
+        # hidden_states1 = hidden_states1 + residual1
+
+        # #residual0 = hidden_states0
+        # residual1 = hidden_states1
+        # #hidden_states0 = self.post_attention_layernorm(hidden_states0)
+        # #hidden_states0 = self.mlp(hidden_states=hidden_states0)["hidden_states"]
+        # # print(f"===Guanhua {hidden_states0=}")
+        # #handle2 = dist.all_reduce(hidden_states0, op=dist.ReduceOp.SUM, group=self.tp_pg, async_op=True)
+        
+        # hidden_states1 = self.post_attention_layernorm(hidden_states1)
+
+        async_col_par(hidden_states1, h_dic, f'{self.layer_idx}_1', group=self.tp_pg)
+        hidden_states11 = F.linear(hidden_states1, self.mlp.gate_up_proj.weight, self.mlp.gate_up_proj.bias)
+        hidden_states1 = self.mlp(merged_states=hidden_states11)["hidden_states"]
         handle2.wait()
-        handle3 = dist.all_reduce(hidden_states1, op=dist.ReduceOp.SUM, group=tp_pg, async_op=True)
+        handle3 = dist.all_reduce(hidden_states1, op=dist.ReduceOp.SUM, group=self.tp_pg, async_op=True)
         hidden_states0 = hidden_states0 + residual0
         handle3.wait()
         hidden_states1 = hidden_states1 + residual1
@@ -888,7 +931,7 @@ class LlamaModel(nn.Module):
         self.lm_head = PipelineBlock(
             p2p=self.p2p,
             # Understand that this means that we return sharded logits that are going to need to be gathered
-            module_builder=TensorParallelColumnLinear,
+            module_builder=TensorParallelColumnLinear1,
             module_kwargs={
                 "in_features": config.hidden_size,
                 "out_features": config.vocab_size,

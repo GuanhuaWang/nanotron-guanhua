@@ -23,6 +23,8 @@ from nanotron.parallel.tensor_parallel.distributed_differentiable_primitives imp
     differentiable_all_reduce_sum,
     differentiable_identity,
     differentiable_reduce_scatter_sum,
+    no_op,
+    _async_col_parallel
 )
 from nanotron.parallel.tensor_parallel.enum import TensorParallelLinearMode
 from nanotron.parallel.utils import MemoryBuffer, assert_cuda_max_connections_set_to_1
@@ -427,6 +429,31 @@ class _ColumnLinearNoAsyncCommunicationReduceScatterMode(torch.autograd.Function
 
         return sub_grad_input, grad_weight, grad_bias, None, None
 
+def column_linear1(
+    input: torch.Tensor,
+    weight: torch.Tensor,
+    bias: Optional[torch.Tensor],
+    group: dist.ProcessGroup,
+    tp_mode: TensorParallelLinearMode,
+    async_communication: bool,
+    tp_recompute_allgather: bool = True,
+):
+    if async_communication:
+        return _ColumnLinearAsyncCommunication.apply(input, weight, bias, group, tp_mode, tp_recompute_allgather)
+
+    if tp_mode is TensorParallelLinearMode.ALL_REDUCE:
+        input = differentiable_identity(input, group=group)  #bwd allreduce
+        #no_op(input, group=group)
+        
+        # _async_col_parallel(input, group=group)
+        # output = F.linear(input, weight, bias)
+        #print(f"===Guanhua {input.shape=}, {output.shape=}")
+        return F.linear(input, weight, bias)
+    if tp_mode is TensorParallelLinearMode.REDUCE_SCATTER:
+        return _ColumnLinearNoAsyncCommunicationReduceScatterMode.apply(
+            input, weight, bias, group, tp_recompute_allgather
+        )
+    raise ValueError(f"Got unexpected mode: {tp_mode}.")
 
 def column_linear(
     input: torch.Tensor,
@@ -441,8 +468,12 @@ def column_linear(
         return _ColumnLinearAsyncCommunication.apply(input, weight, bias, group, tp_mode, tp_recompute_allgather)
 
     if tp_mode is TensorParallelLinearMode.ALL_REDUCE:
-        input = differentiable_identity(input, group=group)
-        return F.linear(input, weight, bias)
+        #input = differentiable_identity(input, group=group)  #bwd allreduce
+        #no_op(input, group=group)
+        # _async_col_parallel(input, group=group)
+        # output = F.linear(input, weight, bias)
+        #print(f"===Guanhua {input.shape=}, {output.shape=}")
+        return #output #F.linear(input, weight, bias)
     if tp_mode is TensorParallelLinearMode.REDUCE_SCATTER:
         return _ColumnLinearNoAsyncCommunicationReduceScatterMode.apply(
             input, weight, bias, group, tp_recompute_allgather
@@ -595,7 +626,7 @@ def row_linear(
     out = F.linear(input, weight, bias)
 
     if tp_mode is TensorParallelLinearMode.ALL_REDUCE:
-        out = differentiable_all_reduce_sum(out, group=group)
+        out = differentiable_all_reduce_sum(out, group=group) #guanhua fwd ar
     elif tp_mode is TensorParallelLinearMode.REDUCE_SCATTER:
         out = differentiable_reduce_scatter_sum(out, group=group)
     else:

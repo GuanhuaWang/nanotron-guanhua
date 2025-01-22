@@ -7,6 +7,7 @@ from nanotron.config import ModelArgs
 from nanotron.nn.layer_norm import TritonRMSNorm
 from nanotron.parallel.tensor_parallel.nn import (
     TensorParallelColumnLinear,
+    TensorParallelColumnLinear1,
     TensorParallelEmbedding,
     TensorParallelRowLinear,
 )
@@ -35,6 +36,7 @@ class StandardParametrizator(Parametrizator):
         super().__init__(config)
         self.MODULE_TO_PARAMETRIZE = {
             TensorParallelColumnLinear: self._parametrize_column_linear,
+            TensorParallelColumnLinear1:self._parametrize_column_linear,
             TensorParallelRowLinear: self._parametrize_row_linear,
             TritonRMSNorm: self._parametrize_layer_norm,
             TensorParallelEmbedding: self._parametrize_embedding,
